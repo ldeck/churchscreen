@@ -1,4 +1,4 @@
-package myscreen;
+package churchscreen.app
 
 import collection.mutable.Stack
 
