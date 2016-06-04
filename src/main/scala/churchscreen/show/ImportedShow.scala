@@ -1,9 +1,10 @@
 package churchscreen.show
 
-import churchscreen.app.{Constants}
+import churchscreen.app.Constants
 import java.io.{FileInputStream, File}
 import org.apache.poi.hslf.usermodel.{SlideShow => ISlideShow}
-import org.apache.poi.hslf.model.{Shape, Slide => ISlide}
+import org.apache.poi.hslf.model.{Slide => ISlide}
+import org.apache.poi.hslf.model.{Shape => Shape}
 
 object ImportedShow
 {
@@ -13,7 +14,7 @@ object ImportedShow
     importedShow.setPageSize(currentShow.show.getPageSize)
 
     println("importing slides...")
-    importedShow.getSlides().foreach { slide => copySlide(slide, currentShow) }
+    importedShow.getSlides.foreach { slide => copySlide(slide, currentShow) }
     
     new ImportedShow(currentShow, importedShow)
   }
@@ -21,12 +22,12 @@ object ImportedShow
   private def copySlide(slide : ISlide, toShow : SlideShow)
   {
     val dup : Slide = toShow.create()
-    slide.getShapes().foreach { shape => copyShape(shape = shape, toSlide = dup) }
+    slide.getShapes.foreach { shape => copyShape(shape = shape, toSlide = dup) }
   }
 
   private def copyShape(shape : Shape, toSlide : Slide)
   {
-    toSlide.slide.addShape(shape)
+    toSlide.hslide.addShape(shape)
   }
 
   private def expandedPath(path : String) : File =

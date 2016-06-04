@@ -1,11 +1,24 @@
 package churchscreen.show
 
+import java.awt.{Rectangle, Dimension, Point}
+
+import scala.io.StdIn.readLine
+
 object Reading
 {
-  def apply(show : SlideShow) : Reading =
+  def readPassage =
   {
-    new Reading(show, show.create(Slide.bibleReading))
+    println("Enter passage:")
+    readLine()
   }
-}
 
-class Reading(val show : SlideShow, val slide : Slide)
+  def readPageNumber =
+  {
+    println("Enter page number:")
+    readLine()
+  }
+
+  def bibleReadingTitleAnchor = new Rectangle(new Point(51, 129), new Dimension(921, 260))
+
+  def bibleReadingTextAnchor = new Rectangle(new Point(51, 396), new Dimension(921, 320))
+}

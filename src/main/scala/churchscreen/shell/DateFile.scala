@@ -3,24 +3,29 @@ package churchscreen.shell
 import java.io.File
 import java.util.Calendar
 import java.text.SimpleDateFormat
+import scala.io.StdIn.readLine
 
 object DateFile
 {
-  def apply(dir : String) : DateFile =
+  def apply(dir : File, ext : String) : DateFile =
   {
     val fileDate = promptForDate
-    val fileName = "%s.ppt".format(fileDate)
-    new DateFile(dir, fileName)
+    new DateFile(dir, fileDate, ext)
+  }
+
+  def apply(dir : File, fileName : String, ext : String) : DateFile =
+  {
+    new DateFile(dir, fileName, ext)
   }
 
   private def promptForDate : String =
   {
     val defaultAnswer = nextSunday
     print("Enter the service date [%s]:".format(defaultAnswer))
-    readLine match
+    readLine() match
     {
-      case s if (s.matches("\\d{4}-\\d{2}-\\d{2}")) => s
-      case d if ("".equals(d)) => defaultAnswer
+      case s if s.matches("\\d{4}-\\d{2}-\\d{2}") => s
+      case d if "".equals(d) => defaultAnswer
       case _ => promptForDate
     }
   }
@@ -38,11 +43,12 @@ object DateFile
   }
 }
 
-class DateFile(val dir : String, val fileName : String)
+class DateFile(val dir : File, val fileName : String, val fileExtension : String)
 {
   def file : File =
   {
-    new File(dir, fileName)
+    val dateName = "%s.%s".format(fileName, fileExtension)
+    new File(dir, dateName)
   }
 
   def path = file.getAbsolutePath

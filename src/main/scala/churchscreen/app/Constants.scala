@@ -1,6 +1,6 @@
 package churchscreen.app
 
-import java.io.{File}
+import java.io.File
 
 object Constants
 {
@@ -11,6 +11,8 @@ object Constants
   def overheadsDir = new File(Constants.baseDir, "overheads")
 
   def backgroundsDir = new File(Constants.baseDir, "backgrounds")
-  
+
   def userHomeDir = new File(System.getProperty("user.home"))
+
+  def webDir = new File(Constants.baseDir, "web")
 }

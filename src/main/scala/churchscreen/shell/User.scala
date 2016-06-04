@@ -1,20 +1,23 @@
 package churchscreen.shell
 
-import java.io.{BufferedReader, File, InputStreamReader}
+import java.io.{BufferedReader, InputStreamReader}
 import scala.collection.Set
 import collection.immutable.SortedMap
 
 import churchscreen.show._
+import churchscreen.web.WebSlideShow
+
+import scala.io.StdIn.readLine
 
 object User
 {
-  def apply(show : SlideShow) : User =
+  def apply(show : SlideShow, webShow : WebSlideShow) : User =
   {
-    new User(show)
+    new User(show, webShow)
   }
 }
 
-class User(val show : SlideShow)
+class User(val show : SlideShow, val webShow : WebSlideShow)
 {
   private var hasPrintedSongList = false
 
@@ -27,34 +30,34 @@ class User(val show : SlideShow)
 
     result = reader.readLine.trim match
     {
-      case "l" => printSongList; promptForAnotherSlide
+      case "l" => printSongList(); promptForAnotherSlide()
       case "s" => promptForSong match
       {
-        case None => promptForAnotherSlide
+        case None => promptForAnotherSlide()
         case _ => true
       }
       case "r" => promptForReading match
       {
-        case None => promptForAnotherSlide
+        case None => promptForAnotherSlide()
         case _ => true
       }
       case "i" => promptForSlideShowToImportFrom match
       {
-        case None => promptForAnotherSlide
+        case None => promptForAnotherSlide()
         case _ => true
       }
       case "e" => false
-      case _ => promptForAnotherSlide
+      case _ => promptForAnotherSlide()
     }
-    return result
+    result
   }
 
-  private def promptForReading : Option[Reading] =
+  private def promptForReading : Option[Slide] =
   {
-    Some(Reading(show))
+    Some(show.create(Slide.reading))
   }
 
-  private def printSongList : Unit =
+  private def printSongList() : Unit =
   {
     val songs : Map[Int, String] = SortedMap(Song.names.view.zipWithIndex map {case (name, index) => (index, name)} : _*)
 
@@ -67,7 +70,7 @@ class User(val show : SlideShow)
   private def promptForSlideShowToImportFrom : Option[ImportedShow] =
   {
     print("Enter path to slideshow to import: ")
-    Console.readLine match {
+    readLine() match {
       case "" => None
       case path => Some(ImportedShow(show, path))
     }
@@ -79,11 +82,11 @@ class User(val show : SlideShow)
 
     if (!hasPrintedSongList)
     {
-      printSongList
+      printSongList()
     }
 
     songIndexChoice(validOptions = songs.keySet) match {
-      case e if (e < 0) => None
+      case e if e < 0 => None
       case i => Some(Song(show, songs(i)))
     }
   }
@@ -91,9 +94,9 @@ class User(val show : SlideShow)
   private def songIndexChoice(validOptions : Set[Int]) : Int =
   {
     print("Enter song number or [c]ancel: ")
-    Console.readLine match {
+    readLine() match {
       case "c" => -1
-      case i if (i.matches("\\d+") && validOptions.contains(i.toInt)) => i.toInt
+      case i if i.matches("\\d+") && validOptions.contains(i.toInt) => i.toInt
       case _ => songIndexChoice(validOptions)
     }
   }

@@ -1,44 +1,41 @@
 package churchscreen.app
 
-import java.io.{File}
-
 import churchscreen.show.{Slide,SlideShow}
 import churchscreen.shell.{DateFile,User}
+import churchscreen.web.{WebSlideShow, WebSlide}
 
 object App extends HeadlessApp
 {
   def main(args: Array[String])
   {
-    if (args.length == 1)
-    {
-      new App(args.head)
-    }
-    else if (args.length == 2 && args(0).equals("-d") && new File(args(1)).isDirectory)
-    {
-      val dateFile = DateFile(args(1))
-      println("Will save file: %s".format(dateFile.path))
-      new App(dateFile.path)
-    }
-    else
-    {
-      println("Usage: [-d] <pptFileToSave>")
-    }
+    val pptFile = DateFile(Constants.overheadsDir, "pptx")
+    val webFile = DateFile(Constants.webDir, pptFile.fileName, "html")
+
+    new App(pptFile, webFile)
   }
 }
 
-class App(val pathToSave : String)
+class App(val pptFile : DateFile, val webFile : DateFile)
 {
-  val show = SlideShow(filePath = pathToSave)
+  val pptShow = SlideShow(file = pptFile.file)
+  val webShow = WebSlideShow(file = webFile.file)
 
-  show.create(Slide.welcome)
-  show.create(Slide.blank)
+  pptShow.create(Slide.welcome)
+  webShow.create(WebSlide.welcome)
 
-  val user = User(show)
-  while (user.promptForAnotherSlide)
+  pptShow.create(Slide.blank)
+  webShow.create(WebSlide.blank)
+
+  val user = User(pptShow, webShow)
+  while (user.promptForAnotherSlide())
   {
-    show.create(Slide.blank)
+    pptShow.create(Slide.blank)
+    webShow.create(WebSlide.blank)
   }
 
-  show.create(Slide.last)
-  show.save
+  pptShow.create(Slide.last)
+  webShow.create(WebSlide.last)
+
+  pptShow.save()
+//  webShow.save()
 }
