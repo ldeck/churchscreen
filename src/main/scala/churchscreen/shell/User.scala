@@ -11,13 +11,13 @@ import scala.io.StdIn.readLine
 
 object User
 {
-  def apply(show : SlideShow, webShow : WebSlideShow) : User =
+  def apply(show : SlideShow) : User =
   {
-    new User(show, webShow)
+    new User(show)
   }
 }
 
-class User(val show : SlideShow, val webShow : WebSlideShow)
+class User(val show : SlideShow)
 {
   private var hasPrintedSongList = false
 
