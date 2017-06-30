@@ -61,13 +61,13 @@ class Song(val show : SlideShow, val file : File)
   {
     val titleSlide : Slide = show.create()
     titleSlide.addTitle(title = displayName)
-    titleSlide.addText(text = contentForSlides.head, lineSpacing = lineSpacing)
+    titleSlide.addText(text = contentForSlides.head, lineSpacing = lineSpacing, bold = true)
 
     var slide : Slide = null
     for (text <- contentForSlides.tail)
     {
       slide = show.create()
-      slide.addText(text = text, lineSpacing = lineSpacing)
+      slide.addText(text = text, lineSpacing = lineSpacing, bold = true)
     }
 
     // copyright
