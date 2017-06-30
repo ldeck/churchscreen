@@ -41,3 +41,6 @@ object ImportedShow
 }
 
 class ImportedShow(val show : SlideShow, val importedShow : ISlideShow)
+{
+  def slides() : List[Slide] = List.empty
+}

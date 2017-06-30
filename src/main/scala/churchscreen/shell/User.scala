@@ -23,35 +23,39 @@ class User(val show : SlideShow)
   def promptForAnotherSlide() : Boolean =
   {
     var result = true
-    print("Enter option [w]elcome, [l]ist, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
+    print("Enter option [w]elcome, [l]ast, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
 
     val reader = new BufferedReader(new InputStreamReader(System.in))
 
     result = reader.readLine.trim match
     {
       case "w" => promptForWelcome match {
-        case None => promptForAnotherSlide()
+        case Nil => promptForAnotherSlide()
         case _ => true
       }
-      case "l" => printSongList(); promptForAnotherSlide()
+      case "l" => promptForLast match
+      {
+        case Nil => promptForAnotherSlide()
+        case _ => true
+      }
       case "s" => promptForSongs match
       {
-        case None => promptForAnotherSlide()
+        case Nil => promptForAnotherSlide()
         case _ => true
       }
       case "r" => promptForReading match
       {
-        case None => promptForAnotherSlide()
+        case Nil => promptForAnotherSlide()
         case _ => true
       }
       case "t" => promptForTextFile match
       {
-        case None => promptForAnotherSlide()
+        case Nil => promptForAnotherSlide()
         case _ => true
       }
       case "i" => promptForSlideShowToImportFrom match
       {
-        case None => promptForAnotherSlide()
+        case Nil => promptForAnotherSlide()
         case _ => true
       }
       case "e" => false
@@ -60,19 +64,24 @@ class User(val show : SlideShow)
     result
   }
 
-  private def promptForWelcome : Option[Slide] =
+  private def promptForWelcome : List[Slide] =
   {
-    Some(show.create(Slide.welcome))
+    List(show.create(Slide.welcome))
   }
 
-  private def promptForReading : Option[Slide] =
+  private def promptForLast : List[Slide] =
   {
-    Some(show.create(Slide.reading))
+    List(show.create(Slide.last))
   }
 
-  private def promptForTextFile : Option[Boolean] =
+  private def promptForReading : List[Slide] =
   {
-    Some(true)
+    List(show.create(Slide.reading))
+  }
+
+  private def promptForTextFile : List[Slide] =
+  {
+    List.empty
   }
 
   private def printSongList() : Unit =
@@ -85,16 +94,16 @@ class User(val show : SlideShow)
     hasPrintedSongList = true
   }
 
-  private def promptForSlideShowToImportFrom : Option[ImportedShow] =
+  private def promptForSlideShowToImportFrom : List[Slide] =
   {
     print("Enter path to slideshow to import: ")
     readLine() match {
-      case "" => None
-      case path => Some(ImportedShow(show, path))
+      case "" => Nil
+      case path => ImportedShow(show, path).slides()
     }
   }
 
-  private def promptForSongs : Option[List[Song]] =
+  private def promptForSongs : List[Song] =
   {
     val songs : Map[Int, String] = SortedMap(Song.names.view.zipWithIndex map {case (name, index) => (index, name)} : _*)
 
@@ -104,8 +113,8 @@ class User(val show : SlideShow)
     }
 
     songIndexChoices(validOptions = songs.keySet) match {
-      case Nil => None
-      case is => Some(is.map(i => Song(show, songs(i))))
+      case Nil => Nil
+      case is => is.map(i => Song(show, songs(i)))
     }
   }
 
