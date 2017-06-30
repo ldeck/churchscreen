@@ -28,4 +28,5 @@ class App(val pptFile : DateFile)
   pptShow.create(Slide.last)
 
   pptShow.save()
+  println("Saved file: " + pptFile.path)
 }
