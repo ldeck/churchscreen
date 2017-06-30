@@ -23,14 +23,14 @@ class User(val show : SlideShow)
   def promptForAnotherSlide() : Boolean =
   {
     var result = true
-    print("Enter option [l]ist, [s]ong, [r]eading, [t]ext file, [i]mport or [e]nd: ")
+    print("Enter option [l]ist, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
 
     val reader = new BufferedReader(new InputStreamReader(System.in))
 
     result = reader.readLine.trim match
     {
       case "l" => printSongList(); promptForAnotherSlide()
-      case "s" => promptForSong match
+      case "s" => promptForSongs match
       {
         case None => promptForAnotherSlide()
         case _ => true
@@ -85,7 +85,7 @@ class User(val show : SlideShow)
     }
   }
 
-  private def promptForSong : Option[Song] =
+  private def promptForSongs : Option[List[Song]] =
   {
     val songs : Map[Int, String] = SortedMap(Song.names.view.zipWithIndex map {case (name, index) => (index, name)} : _*)
 
@@ -94,19 +94,21 @@ class User(val show : SlideShow)
       printSongList()
     }
 
-    songIndexChoice(validOptions = songs.keySet) match {
-      case e if e < 0 => None
-      case i => Some(Song(show, songs(i)))
+    songIndexChoices(validOptions = songs.keySet) match {
+      case Nil => None
+      case is => Some(is.map(i => Song(show, songs(i))))
     }
   }
 
-  private def songIndexChoice(validOptions : Set[Int]) : Int =
+  private def songIndexChoices(validOptions : Set[Int]) : List[Int] =
   {
-    print("Enter song number or [c]ancel: ")
-    readLine() match {
-      case "c" => -1
-      case i if i.matches("\\d+") && validOptions.contains(i.toInt) => i.toInt
-      case _ => songIndexChoice(validOptions)
+    print("Enter song number(s) or [c]ancel: ")
+    readLine().trim match {
+      case "c" => Nil
+      case i if i.matches("\\d+(\\s?,\\s?\\d+)*") &&
+        validOptions.&~(i.split("\\s?,\\s?").map(_.toInt).toSet).nonEmpty =>
+        i.split("\\s?,\\s?").map(_.toInt).toList
+      case _ => songIndexChoices(validOptions)
     }
   }
 }
