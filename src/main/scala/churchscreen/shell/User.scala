@@ -23,12 +23,16 @@ class User(val show : SlideShow)
   def promptForAnotherSlide() : Boolean =
   {
     var result = true
-    print("Enter option [l]ist, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
+    print("Enter option [w]elcome, [l]ist, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
 
     val reader = new BufferedReader(new InputStreamReader(System.in))
 
     result = reader.readLine.trim match
     {
+      case "w" => promptForWelcome match {
+        case None => promptForAnotherSlide()
+        case _ => true
+      }
       case "l" => printSongList(); promptForAnotherSlide()
       case "s" => promptForSongs match
       {
@@ -54,6 +58,11 @@ class User(val show : SlideShow)
       case _ => promptForAnotherSlide()
     }
     result
+  }
+
+  private def promptForWelcome : Option[Slide] =
+  {
+    Some(show.create(Slide.welcome))
   }
 
   private def promptForReading : Option[Slide] =

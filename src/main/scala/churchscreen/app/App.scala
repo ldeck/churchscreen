@@ -16,9 +16,6 @@ class App(val pptFile : DateFile)
 {
   val pptShow = SlideShow(file = pptFile.file)
 
-  pptShow.create(Slide.welcome)
-  pptShow.create(Slide.blank)
-
   val user = User(pptShow)
   while (user.promptForAnotherSlide())
   {
