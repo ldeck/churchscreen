@@ -5,7 +5,6 @@ import scala.collection.Set
 import collection.immutable.SortedMap
 
 import churchscreen.show._
-import churchscreen.web.WebSlideShow
 
 import scala.io.StdIn.readLine
 

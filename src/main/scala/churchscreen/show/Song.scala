@@ -36,7 +36,7 @@ object Song
 
 class Song(val show : SlideShow, val file : File)
 {
-  private def ccliPermissionText = "Used by permission. CCLI Licence No. 231196"
+  private def ccliPermissionText = "Used by permission. CCLI Licence No. " + Constants.ccliLicenceNo
   private def ccliPermissionAnchor = new Rectangle(new Point(71, 711), new Dimension(881, 26))
 
   private def footerAnchor = new Rectangle(new Point(71, 680), new Dimension(881, 26))
@@ -57,7 +57,7 @@ class Song(val show : SlideShow, val file : File)
 
   println("song %s has %d paragraphs".format(displayName, paragraphs.length))
 
-  private def init : Unit =
+  private def init() : Unit =
   {
     val titleSlide : Slide = show.create()
     titleSlide.addTitle(title = displayName)
@@ -90,5 +90,5 @@ class Song(val show : SlideShow, val file : File)
     new Rectangle(newPoint, newDim)
   }
 
-  init
+  init()
 }

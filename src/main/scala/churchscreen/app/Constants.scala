@@ -1,10 +1,25 @@
 package churchscreen.app
 
-import java.io.File
+import java.io.{BufferedReader, File, FileReader}
 
 object Constants
 {
   def baseDir = new File(System.getProperty("base.dir", System.getProperty("user.home")), "churchscreen")
+
+  def ccliLicenceNo: String = {
+    val no = System.getProperty("ccli.no")
+    if (no != null) {
+      no
+    } else {
+      val preferenceFile = new File(Constants.userHomeDir, ".churchscreen/ccli_no")
+      var userDefined: String = null
+      if (preferenceFile.canRead && preferenceFile.length() != 0) {
+        userDefined = new BufferedReader(new FileReader(preferenceFile)).readLine()
+      }
+      if (userDefined != null && !userDefined.trim.isEmpty) userDefined
+      else "CCLI"
+    }
+  }
 
   def rawTextDir = new File(Constants.baseDir, "rawtext")
 

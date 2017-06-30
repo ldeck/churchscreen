@@ -2,7 +2,6 @@ package churchscreen.app
 
 import churchscreen.show.{Slide,SlideShow}
 import churchscreen.shell.{DateFile,User}
-import churchscreen.web.{WebSlideShow, WebSlide}
 
 object App extends HeadlessApp
 {
