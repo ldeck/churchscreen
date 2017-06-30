@@ -62,11 +62,11 @@ class Slide(val show : SlideShow, val hslide : HSlide)
   private def defaultTextAnchor = new Rectangle(new Point(71, 77), new Dimension(881, 591))
   private def defaultTitleAnchor = new Rectangle(new Point(71, 26), new Dimension(881, 49))
 
-  def addTitle(title:String, anchor:Rectangle = defaultTitleAnchor, align:Int = TextShape.AlignLeft, fontName:String = "Gill Sans", fontSize:Int = 24, color:Color = Color.DARK_GRAY, bold:Boolean = true, valign:Int = TextShape.AnchorBottom, shadow:Boolean = true) : Unit =
-    {
-      val titleBox : TextBox = hslide.addTitle()
-      alterTextBox(titleBox, text = title, lineSpacing = 100, anchor = anchor, align = align, fontName = fontName, fontSize = fontSize, color = color, bold = bold, valign = valign, shadow = shadow)
-    }
+  def addTitle(title:String, anchor:Rectangle = defaultTitleAnchor, align:Int = TextShape.AlignLeft, fontName:String = "Gill Sans", fontSize:Int = 24, color:Color = Color.DARK_GRAY, bold:Boolean = true, valign:Int = TextShape.AnchorBottom, shadow:Boolean = true, underline:Boolean = false) : Unit =
+  {
+    val titleBox : TextBox = hslide.addTitle()
+    alterTextBox(titleBox, text = title, lineSpacing = 100, anchor = anchor, align = align, fontName = fontName, fontSize = fontSize, color = color, bold = bold, valign = valign, shadow = shadow, underline = underline)
+  }
 
   def addText(text:String, lineSpacing:Int = 0, anchor:Rectangle = defaultTextAnchor, align:Int = TextShape.AlignLeft, fontName:String = "Gill Sans", fontSize:Int = 48, color:Color = Color.BLACK, bold:Boolean = false, valign:Int = TextShape.AnchorTop, shadow:Boolean = false) : Unit =
   {
@@ -86,7 +86,8 @@ class Slide(val show : SlideShow, val hslide : HSlide)
     color : Color = Color.BLACK,
     bold : Boolean = false,
     valign : Int = TextShape.AnchorTop,
-    shadow : Boolean = false
+    shadow : Boolean = false,
+    underline : Boolean = false
   )
     : Unit =
   {
@@ -102,6 +103,7 @@ class Slide(val show : SlideShow, val hslide : HSlide)
     run.setFontColor(color)
     run.setShadowed(shadow)
     run.setSpaceAfter(lineSpacing)
+    run.setUnderlined(underline)
 
     box.setText(text)
   }

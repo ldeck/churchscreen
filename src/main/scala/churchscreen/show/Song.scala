@@ -60,7 +60,7 @@ class Song(val show : SlideShow, val file : File)
   private def init() : Unit =
   {
     val titleSlide : Slide = show.create()
-    titleSlide.addTitle(title = displayName)
+    titleSlide.addTitle(title = displayName, underline = true)
     titleSlide.addText(text = contentForSlides.head, lineSpacing = lineSpacing, bold = true)
 
     var slide : Slide = null
