@@ -5,6 +5,7 @@ import java.io.{BufferedReader, File, FileReader}
 object Constants
 {
   def baseDir = new File(System.getProperty("base.dir", System.getProperty("user.home")), "churchscreen")
+  private val outDir = System.getProperty("out.dir")
 
   def ccliLicenceNo: String = {
     val no = System.getProperty("ccli.no")
@@ -23,7 +24,7 @@ object Constants
 
   def rawTextDir = new File(Constants.baseDir, "rawtext")
 
-  def overheadsDir = new File(Constants.baseDir, "overheads")
+  def overheadsDir: File = if (outDir != null) new File(outDir) else new File(Constants.baseDir, "overheads")
 
   def backgroundsDir = new File(Constants.baseDir, "backgrounds")
 
