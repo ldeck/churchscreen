@@ -1,11 +1,10 @@
 package churchscreen.shell
 
-import java.io.{BufferedReader, InputStreamReader}
 import scala.collection.Set
 import collection.immutable.SortedMap
-
 import churchscreen.show._
 
+import scala.io.StdIn
 import scala.io.StdIn.readLine
 
 object User
@@ -20,48 +19,27 @@ class User(val show : SlideShow)
 {
   private var hasPrintedSongList = false
 
+  def promptForSlides() : List[Slide] =
+  {
+    StdIn.readLine(text = "Enter option [w]elcome, [l]ast, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ").trim match
+    {
+      case "w" => promptForWelcome
+      case "l" => promptForLast
+      case "s" => promptForSongs
+      case "r" => promptForReading
+      case "t" => promptForTextFile
+      case "i" => promptForSlideShowToImportFrom
+      case "e" => List.empty
+      case _ => promptForSlides()
+    }
+  }
+
   def promptForAnotherSlide() : Boolean =
   {
-    var result = true
-    print("Enter option [w]elcome, [l]ast, [s]ong(s), [r]eading, [t]ext file, [i]mport or [e]nd: ")
-
-    val reader = new BufferedReader(new InputStreamReader(System.in))
-
-    result = reader.readLine.trim match
-    {
-      case "w" => promptForWelcome match {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "l" => promptForLast match
-      {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "s" => promptForSongs match
-      {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "r" => promptForReading match
-      {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "t" => promptForTextFile match
-      {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "i" => promptForSlideShowToImportFrom match
-      {
-        case Nil => promptForAnotherSlide()
-        case _ => true
-      }
-      case "e" => false
-      case _ => promptForAnotherSlide()
+    promptForSlides() match {
+      case Nil => false
+      case _ => true
     }
-    result
   }
 
   private def promptForWelcome : List[Slide] =
@@ -103,7 +81,7 @@ class User(val show : SlideShow)
     }
   }
 
-  private def promptForSongs : List[Song] =
+  private def promptForSongs : List[Slide] =
   {
     val songs : Map[Int, String] = SortedMap(Song.names.view.zipWithIndex map {case (name, index) => (index, name)} : _*)
 
@@ -114,7 +92,7 @@ class User(val show : SlideShow)
 
     songIndexChoices(validOptions = songs.keySet) match {
       case Nil => Nil
-      case is => is.map(i => Song(show, songs(i)))
+      case is => is.flatMap(i => Song(show, songs(i)).slides())
     }
   }
 

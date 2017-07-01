@@ -1,11 +1,15 @@
 package churchscreen.show
 
-import churchscreen.app.{Constants}
+import churchscreen.app.Constants
 import org.apache.commons.io.FilenameUtils
+
 import io.Source
-import java.io.{FilenameFilter, File}
+import java.io.{File, FilenameFilter}
+
 import org.apache.poi.hslf.model.TextShape
-import java.awt.{Dimension, Point, Rectangle, Color}
+import java.awt.{Color, Dimension, Point, Rectangle}
+
+import scala.collection.mutable
 
 object Song
 {
@@ -57,24 +61,26 @@ class Song(val show : SlideShow, val file : File)
 
   println("song %s has %d paragraphs".format(displayName, paragraphs.length))
 
+  private val _slides: mutable.MutableList[Slide] = mutable.MutableList()
+  def slides() : List[Slide] = _slides.toList
+
   private def init() : Unit =
   {
     val titleSlide : Slide = show.create()
     titleSlide.addTitle(title = displayName, underline = true)
     titleSlide.addText(text = contentForSlides.head, lineSpacing = lineSpacing, bold = true)
 
-    var slide : Slide = null
     for (text <- contentForSlides.tail)
     {
-      slide = show.create()
-      slide.addText(text = text, lineSpacing = lineSpacing, bold = true)
+      _slides += show.create()
+      _slides.last.addText(text = text, lineSpacing = lineSpacing, bold = true)
     }
 
     // copyright
-    slide.addText(text = copyright, anchor = footerAnchor(copyright), align = TextShape.AlignRight, fontName = footerFontName, fontSize = footerFontSize, color = Color.GRAY, bold = false, valign = TextShape.AnchorBottom)
+    _slides.last.addText(text = copyright, anchor = footerAnchor(copyright), align = TextShape.AlignRight, fontName = footerFontName, fontSize = footerFontSize, color = Color.GRAY, valign = TextShape.AnchorBottom)
 
     // CCLI
-    slide.addText(text = ccliPermissionText, anchor = ccliPermissionAnchor, align = TextShape.AlignRight, fontName = footerFontName, fontSize = footerFontSize, color = Color.GRAY, bold = false, valign = TextShape.AnchorBottom)
+    _slides.last.addText(text = ccliPermissionText, anchor = ccliPermissionAnchor, align = TextShape.AlignRight, fontName = footerFontName, fontSize = footerFontSize, color = Color.GRAY, valign = TextShape.AnchorBottom)
   }
 
   private def footerAnchor(text : String) : Rectangle =
