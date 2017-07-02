@@ -34,14 +34,6 @@ class User(val show : SlideShow)
     }
   }
 
-  def promptForAnotherSlide() : Boolean =
-  {
-    promptForSlides() match {
-      case Nil => false
-      case _ => true
-    }
-  }
-
   private def promptForWelcome : List[Slide] =
   {
     List(show.create(Slide.welcome))
