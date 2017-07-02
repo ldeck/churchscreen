@@ -49,8 +49,6 @@ class Song(val show : SlideShow, val file : File)
   private def footerFontName = "Monaco"
   private def footerFontSize = 14
 
-  private def lineSpacing = 85
-
   private val paragraphs = Source.fromFile(file, "UTF-8").mkString.split("(\r?\n){2}")
 
   def copyright = paragraphs.last
@@ -67,13 +65,13 @@ class Song(val show : SlideShow, val file : File)
   private def init() : Unit =
   {
     val titleSlide : Slide = show.create()
-    titleSlide.addTitle(title = displayName, underline = true)
-    titleSlide.addText(text = contentForSlides.head, lineSpacing = lineSpacing, bold = true)
+    titleSlide.addTitle(title = displayName, underline = true, fontSize = 36)
+    addBodyTextToSlide(text = contentForSlides.head, slide = titleSlide)
 
     for (text <- contentForSlides.tail)
     {
       _slides += show.create()
-      _slides.last.addText(text = text, lineSpacing = lineSpacing, bold = true)
+      addBodyTextToSlide(text = text, slide = _slides.last)
     }
 
     // copyright
@@ -81,6 +79,10 @@ class Song(val show : SlideShow, val file : File)
 
     // CCLI
     _slides.last.addText(text = ccliPermissionText, anchor = ccliPermissionAnchor, align = TextShape.AlignRight, fontName = footerFontName, fontSize = footerFontSize, color = Color.GRAY, valign = TextShape.AnchorBottom)
+  }
+
+  private def addBodyTextToSlide(text: String, slide: Slide) : Unit = {
+    slide.addText(text = text, fontSize = 64, lineSpacing = 22, bold = true)
   }
 
   private def footerAnchor(text : String) : Rectangle =
