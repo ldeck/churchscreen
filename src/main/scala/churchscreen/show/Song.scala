@@ -43,6 +43,12 @@ class Song(val show : SlideShow, val file : File)
   private def ccliPermissionText = "Used by permission. CCLI Licence No. " + Constants.ccliLicenceNo
   private def ccliPermissionAnchor = new Rectangle(new Point(71, 711), new Dimension(881, 26))
 
+  private def titleFontName = bodyFontName
+  private def titleFontSize = 36
+
+  private def bodyFontName = "Capitals"
+  private def bodyLineSpacing = 32
+
   private def footerAnchor = new Rectangle(new Point(71, 680), new Dimension(881, 26))
   private def footerAnchorDimensions = new Dimension(881, 26)
   private def footerAnchorPoint = new Point(71, 680)
@@ -65,7 +71,7 @@ class Song(val show : SlideShow, val file : File)
   private def init() : Unit =
   {
     val titleSlide : Slide = show.create()
-    titleSlide.addTitle(title = displayName, underline = true, fontSize = 36)
+    titleSlide.addTitle(title = displayName, underline = true, fontName = titleFontName, fontSize = titleFontSize)
     addBodyTextToSlide(text = contentForSlides.head, slide = titleSlide)
 
     for (text <- contentForSlides.tail)
@@ -82,7 +88,7 @@ class Song(val show : SlideShow, val file : File)
   }
 
   private def addBodyTextToSlide(text: String, slide: Slide) : Unit = {
-    slide.addText(text = text, fontSize = 64, lineSpacing = 22, bold = true)
+    slide.addText(text = text, fontName = bodyFontName, lineSpacing = bodyLineSpacing, bold = true)
   }
 
   private def footerAnchor(text : String) : Rectangle =
